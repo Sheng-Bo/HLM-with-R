@@ -1,7 +1,7 @@
 library(foreign)
 library(htmlTable)
 
-hsb1       = read.spss('/Users/artalose/Google Drive/OSU/Courses/SP16 ESQREM 8658 - Multilevel Analys (13179)/HSB DATA/hsb1.sav',to.data.frame =TRUE)
+hsb1       = read.spss('hsb1.sav',to.data.frame =TRUE)
 myschool   = subset(hsb1, schoolid                                                                                                             =='1288')
 
 variables  = myschool[c("mathach", "ses")]
