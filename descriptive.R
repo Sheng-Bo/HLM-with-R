@@ -1,34 +1,47 @@
-if("foreign" %in% rownames(installed.packages()) == FALSE) {install.packages("foreign")}
-if("JGR" %in% rownames(installed.packages()) == FALSE) {install.packages("JGR")}
-if("Deducer" %in% rownames(installed.packages()) == FALSE) {install.packages("Deducer")}
 if("htmlTable" %in% rownames(installed.packages()) == FALSE) {install.packages("htmlTable")}
 
 library(foreign)
-library(JGR)
-library(Deducer)
 library(htmlTable)
 
-hsb1 = read.spss (
+# Import SPSS *.sav file
+hsb1 = read.spss(
   'hsb1.sav',
   to.data.frame =TRUE
 )
 
-hsb1.sub = subset (
+# Filter
+hsb1.sub = subset(
   hsb1,
   schoolid == 1288
 )
 
-output = descriptive.table (
-  vars = d(ses,mathach),
-  data = hsb1.sub,
-  func.names = c("Mean","St. Deviation","Valid N")
+# Select variables
+variables  = hsb1.sub[c(
+  "mathach",
+  "ses"
+)]
+
+# Select statistics
+statistics = function(x) c(
+  mean = mean(x),
+  sd = sd(x),
+  N = length(x)
 )
 
-output = data.frame(output)
+# Descriptive output
+output = t(sapply(
+  variables,
+  statistics,
+  USE.NAMES = TRUE
+))
 
+# Round decimals
+output = round(output, digits = 4)
+
+# Use HTML table to display the output
 htmlTable(
   output,
-  header  =  c("mean", "sd", "N"),
-  caption = "Descriptive Statistics"
+  caption = "Descriptive Statistics",
+  header  =  c("mean", "sd", "N")
 )
 
